@@ -1,0 +1,20 @@
+/*This function creates a temporary table called @User and inserts all rows from the Users table where the Value column is equal to 1. 
+Then, it returns the first row of the @User table using the TOP 1 clause./*
+
+CREATE FUNCTION GetFirstUserWithValue1()
+RETURNS TABLE
+AS
+BEGIN
+    DECLARE @User TABLE (ID INT, Value INT);
+
+    INSERT INTO @User (ID, Value)
+    SELECT ID, Value
+    FROM Users
+    WHERE Value = 1;
+
+    RETURN 
+    (
+        SELECT TOP 1 * FROM @User
+    );
+END;
+
