@@ -1,0 +1,30 @@
+/*
+
+I'm just messing with tables here, really interested in making a huge ETL process ;)
+Wouldn't call it a warehouse worthy query... so... datawareshack!
+
+
+*/
+
+
+-- Create a temporary table to hold the extracted data
+CREATE TABLE ##StagingArea (
+    UserName NVARCHAR(255),
+    DOB DATE,
+    Country NVARCHAR(255),
+    MIA BIT,
+    Balance INT
+);
+
+-- Insert data into the staging area
+INSERT INTO ##StagingArea (UserName, DOB, Country, MIA, Balance)
+SELECT UserName, DOB, Country, MIA, Balance
+FROM Users;
+
+-- Create a new column to store the transformed balance
+ALTER TABLE ##StagingArea
+ADD FormattedBalance MONEY;
+
+-- Copy the balance values to the new formatted balance column
+UPDATE ##StagingArea
+SET FormattedBalance = CAST(Balance AS MONEY);
